@@ -56,7 +56,9 @@ class UserModifyPasswordAPI(Resource):
     def put(self, userId):
         with Session() as session:
             try:
-                jsonData = UserSchema(only=("password",),).load(
+                jsonData = UserSchema(
+                    only=("password",),
+                ).load(
                     request.get_json(),
                     session=session,
                     partial=("userName", "email", "role", "isActivate"),
@@ -84,7 +86,9 @@ class UserModifyPasswordAPI(Resource):
                 return ErrorHandler.error400(format_exception_only(type(e), e))
 
             session.commit()
-            return ResponseHandler.res200({"message": "パスワードの変更が完了しました｡"})
+            return ResponseHandler.res200(
+                {"message": "パスワードの変更が完了しました｡"}
+            )
 
 
 class UserModifyUserNameAPI(Resource):
@@ -92,7 +96,9 @@ class UserModifyUserNameAPI(Resource):
     def put(self, userId):
         with Session() as session:
             try:
-                jsonData = UserSchema(only=("userName",),).load(
+                jsonData = UserSchema(
+                    only=("userName",),
+                ).load(
                     request.get_json(),
                     session=session,
                     partial=("email", "password", "role", "isActivate"),

@@ -8,7 +8,6 @@ from models.setting import CONNECTION, Base, ENGINE, Session
 
 
 def init_db():
-    Base.metadata.drop_all(bind=ENGINE)
     Base.metadata.create_all(bind=ENGINE)
 
 
@@ -200,7 +199,6 @@ def test_data():
 
 # このPythonスクリプトを実行したとき、テーブルを一旦削除して新規作成する
 def main(args):
-    Base.metadata.drop_all(bind=ENGINE)
     Base.metadata.create_all(bind=ENGINE)
     CONNECTION.close()
 

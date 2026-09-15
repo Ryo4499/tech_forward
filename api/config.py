@@ -1,6 +1,7 @@
 import os
 import datetime
 
+
 # 開発環境のconfig
 class Development(object):
     SECRET_KEY = os.urandom(24)

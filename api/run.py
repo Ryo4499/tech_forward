@@ -13,9 +13,9 @@ from flask.json import jsonify
 from flask_restful import Api
 from models.setting import ENGINE, Session, CONNECTION
 from jwt_token import init_jwt
-from apis.auth import LoginAPI, LogoutAPI
-from apis.user import UserAPI, UserPostAPI, UserSelfAPI
-from apis.tag import (
+from apis.auth.auth import LoginAPI, LogoutAPI
+from apis.user.user import UserAPI, UserPostAPI, UserSelfAPI
+from apis.tag.tag import (
     TagAPI,
     TagPostAPI,
     TagsAPI,
@@ -30,7 +30,7 @@ from apis.user_modify import (
     UserModifyPasswordAPI,
     UserModifyUserNameAPI,
 )
-from apis.article import ArticleAPI, ArticlePostAPI
+from apis.article.article import ArticleAPI, ArticlePostAPI
 from apis.articles import (
     ArticlesAPI,
     ArticlesByUserAPI,
@@ -62,8 +62,9 @@ from apis.comment_admin import (
 def create_app(test_config=None) -> Flask:
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
-    app.config.from_object("config.Production")
+    app.config.from_object(test_config or "config.Production")
     app.url_map.strict_slashes = False
+    app.config["PROPAGATE_EXCEPTIONS"] = True
 
     # ensure the instance folder exists
     try:
@@ -85,8 +86,6 @@ def create_app(test_config=None) -> Flask:
 
     # dbの初期化
     models.init_db()
-    # テストデータの挿入
-    models.test_data()
 
     init_jwt(app)
 
@@ -153,12 +152,12 @@ def create_app(test_config=None) -> Flask:
     )
 
     # IPアドレスによるアクセス制限
-    ALLOW_NETWORKS = ["172.16.0.0/12", "192.168.0.0/16", "127.0.0.1"]
+    ALLOW_NETWORKS = ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "127.0.0.1"]
 
     @app.before_request
     def before_request():
         req_address = ipaddress.ip_address(request.remote_addr)
-        app.logger.info(req_address)
+        app.logger.info("%s %s from %s", request.method, request.path, req_address)
 
         for allow_network in ALLOW_NETWORKS:
             ip_network = ipaddress.ip_network(allow_network)
@@ -181,8 +180,6 @@ def create_app(test_config=None) -> Flask:
     @app.teardown_request
     def teardown_request(x):
         Session.remove()
-        CONNECTION.close()
-        ENGINE.dispose()
 
     return app
 

@@ -90,14 +90,8 @@ export default {
     '@nuxtjs/proxy'
   ],
   axios: {
-    proxy: true,
-  },
-  proxy: {
-    '/api/': {
-      target: 'http://back:5000',
-      changeOrigin: true,
-      secure: false
-    }
+    baseURL: process.env.API_URL || 'http://api:5000/api',
+    browserBaseURL: '/api',
   },
   styleResources: {
     scss: ['@/assets/scss/*.scss'],
@@ -146,7 +140,7 @@ export default {
     redirect: {
       login: '/login',
       logout: '/',
-      home: '/',
+      home: '/articles',
       callback: false,
     },
     localStorage: false,
@@ -168,7 +162,7 @@ export default {
             method: 'post',
             propertyName: 'access_token',
           },
-          logout: false,
+          logout: { url: '/logout', method: 'post' },
           user: { url: '/user/me', method: 'get' },
         },
       },
@@ -247,7 +241,7 @@ export default {
   build: {
     loadingScreen: false,
     hardSource: true,
-    //analyze: true,
+    // analyze: true,
     transpile: ['vee-validate/dist/rules', 'axios'],
     extend(config, { isClient }) {
       if (isClient) {

@@ -15,9 +15,14 @@ load_dotenv(verbose=True)
 dotenv_path = join(dirname(__file__), "../.env")
 load_dotenv(dotenv_path)
 
+password = os.environ.get("DB_PASS")
+if os.environ.get("DB_PASS_FILE"):
+    with open(os.environ["DB_PASS_FILE"]) as secret:
+        password = secret.read().strip()
+
 DATABASE = "mariadb+mariadbconnector://%s:%s@%s/%s?charset=utf8mb4" % (
     os.environ["DB_USER"],
-    os.environ["DB_PASS"],
+    password,
     os.environ["DB_HOST"],
     os.environ["DB_NAME"],
 )

@@ -98,7 +98,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { Article, Articles, User } from '@/@types/articles'
+import { Article } from '@/@types/articles'
 
 export type DataType = {
   page: number
@@ -173,8 +173,8 @@ export default Vue.extend({
           params: { page: this.page, perpage: this.perpage },
         })
         .then((res) => {
-          this.total = Math.ceil(res.data.count / this.perpage)
-          this.items = res.data.result
+          this.total = res.status === 204 ? 0 : Math.ceil(res.data.count / this.perpage)
+          this.items = res.status === 204 ? [] : res.data.result
           // @ts-ignore
           this.$router.push({
             query: {
@@ -185,7 +185,7 @@ export default Vue.extend({
           this.$vuetify.goTo(0)
           this.show = true
         })
-        .catch((err) => { })
+        .catch((err) => { console.error(err.message) })
         .finally(() => {
           this.push = false
         })
@@ -200,12 +200,12 @@ export default Vue.extend({
       this.editedIndex = await this.items.indexOf(this.editItem)
       await this.$axios
         .delete('/article/' + this.editItem.articleId, {})
-        .then((res) => {
+        .then(() => {
           this.showConfirm = false
           // @ts-ignore
           this.items.splice(this.editedIndex, 1)
         })
-        .catch((err) => { })
+        .catch((err) => { console.error(err.message) })
         .finally(() => {
           this.push = false
         })

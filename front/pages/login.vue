@@ -89,15 +89,9 @@ export default Vue.extend({
         await this.$auth.loginWith('local', {
           data: { userName: this.userName, password: this.password },
         })
-        if (this.$auth.$state.loggedIn) {
-          await this.$auth.fetchUser()
-          await this.$router.push({
-            path: '/articles',
-            query: { page: '1', perpage: '10' },
-          })
-        }
+        await this.$router.replace('/articles')
       } catch (err: any) {
-        if (err.response.status === 422) {
+        if (err.response?.status === 422) {
           this.snackbar = true
           return
         }

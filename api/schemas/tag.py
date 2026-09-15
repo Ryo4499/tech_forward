@@ -11,7 +11,6 @@ from marshmallow_sqlalchemy.schema import auto_field
 
 
 class TagSchema(SQLAlchemyAutoSchema):
-
     tagId = auto_field()
     tagName = auto_field(
         validate=Length(min=1, max=30),

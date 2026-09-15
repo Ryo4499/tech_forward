@@ -13,7 +13,6 @@ from marshmallow_sqlalchemy.schema import auto_field
 
 
 class ArticleSchema(SQLAlchemyAutoSchema):
-
     userId = auto_field(load_only=True)
     articleId = auto_field()
     title = auto_field()
@@ -66,8 +65,7 @@ adminReqSchema = {
         },
         "tags": {
             "type": "array",
-            "null"
-            "items": {
+            "nullitems": {
                 "type": "string",
                 "minLength": 1,
                 "maxLength": 30,
@@ -99,8 +97,7 @@ userReqSchema = {
         "draft": {"type": "boolean"},
         "tags": {
             "type": "array",
-            "null"
-            "items": {
+            "nullitems": {
                 "type": "string",
                 "minLength": 1,
                 "maxLength": 30,

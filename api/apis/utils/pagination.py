@@ -1,5 +1,5 @@
 from flask import request
-from entities.article import Article
+from models.article import Article
 
 
 class Pagination:

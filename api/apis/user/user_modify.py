@@ -102,7 +102,9 @@ class UserModifyPasswordAPI(Resource):
                 return ErrorHandler.error400(format_exception_only(type(e), e))
 
             session.commit()
-            return ResponseHandler.res200({"message": "パスワードの変更が完了しました｡"})
+            return ResponseHandler.res200(
+                {"message": "パスワードの変更が完了しました｡"}
+            )
 
 
 class UserModifyUserNameAPI(Resource):

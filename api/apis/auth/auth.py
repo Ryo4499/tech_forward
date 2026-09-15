@@ -4,9 +4,9 @@ from flask_restful import Resource
 from marshmallow.exceptions import ValidationError
 from jwt_token import create_access_token, get_jwt, auth_required
 from schemas.user import UserSchema
-from entities import Session
-from entities.token_blocklist import TokenBlocklist
-from entities.user import User
+from models.setting import Session
+from models.token_blocklist import TokenBlocklist
+from models.user import User
 from helper.message import UNAUTHORIZED, USER_IS_DELETED, INPUT_VALUE_DO_NOT_MATCH
 from helper.response import ResponseHandler
 from helper.error import ErrorHandler

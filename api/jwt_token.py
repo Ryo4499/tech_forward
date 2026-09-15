@@ -16,6 +16,7 @@ from functools import wraps
 # JWTインスタンスを作成
 jwt = JWTManager()
 
+
 # トークンにroleの情報を追加
 @jwt.additional_claims_loader
 def add_claims_to_access_token(identity):
@@ -37,7 +38,8 @@ def auth_required(fn):
                 return make_response(jsonify({"message": "許可されていません｡"}), 403)
             elif user.isActivate != claims["isActivate"] or user.role != claims["role"]:
                 return make_response(
-                    jsonify({"message": "エラーが発生しました｡ログアウトして下さい｡"}), 409
+                    jsonify({"message": "エラーが発生しました｡ログアウトして下さい｡"}),
+                    409,
                 )
             else:
                 return fn(*args, **kwargs)
@@ -58,7 +60,8 @@ def admin_required(fn):
                 return make_response(jsonify({"message": "許可されていません｡"}), 403)
             elif user.isActivate != claims["isActivate"] or user.role != claims["role"]:
                 return make_response(
-                    jsonify({"message": "エラーが発生しました｡ログアウトして下さい｡"}), 409
+                    jsonify({"message": "エラーが発生しました｡ログアウトして下さい｡"}),
+                    409,
                 )
             else:
                 return fn(*args, **kwargs)
@@ -77,12 +80,13 @@ def self_or_admin_required_user(fn):
             user = session.query(User).filter_by(userId=claims["userId"]).first()
             session.commit()
             if (
-                claims["userId"] != kwargs["userId"] or claims["role"] != "admin"
-            ) and claims["isActivate"] != True:
+                claims["userId"] != kwargs["userId"] and claims["role"] != "admin"
+            ) or claims["isActivate"] != True:
                 return make_response(jsonify({"message": "許可されていません｡"}), 403)
             elif user.isActivate != claims["isActivate"] or user.role != claims["role"]:
                 return make_response(
-                    jsonify({"message": "エラーが発生しました｡ログアウトして下さい｡"}), 409
+                    jsonify({"message": "エラーが発生しました｡ログアウトして下さい｡"}),
+                    409,
                 )
             else:
                 return fn(*args, **kwargs)
@@ -92,24 +96,29 @@ def self_or_admin_required_user(fn):
 
 # トークンの有効期限切れ時の挙動
 @jwt.expired_token_loader
-def my_expired_token_callback(expired_token):
+def my_expired_token_callback(jwt_header, expired_token):
     token_type = expired_token["type"]
 
     if token_type == "access":
-        return make_response(jsonify({"message": "アクセストークンが有効期限切れです｡"}), 401)
+        return make_response(
+            jsonify({"message": "アクセストークンが有効期限切れです｡"}), 401
+        )
 
 
 # 無効な形式のトークン時の挙動
 @jwt.invalid_token_loader
 def my_invalid_token_callback(error_string):
-    return make_response(jsonify({"message": "トークンが無効です｡", "error": error_string}), 401)
+    return make_response(
+        jsonify({"message": "トークンが無効です｡", "error": error_string}), 401
+    )
 
 
 # 認証エラー時の挙動
 @jwt.unauthorized_loader
 def my_unauthorized_callback(error_string):
     return make_response(
-        jsonify({"message": "認証時にエラーが発生しました｡", "error": error_string}), 401
+        jsonify({"message": "認証時にエラーが発生しました｡", "error": error_string}),
+        401,
     )
 
 

@@ -16,7 +16,9 @@ class TagAdminAPI(Resource):
     def put(self, tagId):
         with Session() as session:
             try:
-                data = TagSchema(only=("tagName",),).load(
+                data = TagSchema(
+                    only=("tagName",),
+                ).load(
                     request.get_json(),
                     session=session,
                 )

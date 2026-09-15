@@ -7,10 +7,10 @@ from jsonschema.exceptions import ValidationError
 from jwt_token import auth_required, get_jwt
 from flask import request, Response
 from flask_restful import Resource
-from entities import Session, REGEX_PATTERN
-from entities.article import Article
-from entities.user import User
-from entities.tag import Tag
+from models.setting import Session, REGEX_PATTERN
+from models.article import Article
+from models.user import User
+from models.tag import Tag
 from helper.message import (
     ARTICLE_NOT_FOUND,
     TITLE_VALIDATION_ERROR,
@@ -22,7 +22,7 @@ from helper.response import ResponseHandler
 from schemas.article import ArticleSchema, adminReqSchema, userReqSchema
 
 
-TAG_RESTRICTION = f"タグは{os.getenv('MAX_TAG',5)}つまでしか登録できません"
+TAG_RESTRICTION = f"タグは{os.getenv('MAX_TAG', 5)}つまでしか登録できません"
 
 
 def regex_pattern(target: str) -> bool:
@@ -161,7 +161,8 @@ class ArticleAPI(Resource):
                             .first()
                         )
                         article.user = userQuery
-                    article.isActivate = json["isActivate"]
+                    if isAdmin and "isActivate" in json:
+                        article.isActivate = json["isActivate"]
 
                     session.add(article)
                     session.commit()

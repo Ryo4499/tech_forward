@@ -6,9 +6,9 @@ from sqlalchemy.sql.expression import asc, desc
 from sqlalchemy.sql.functions import func
 from jwt_token import auth_required, get_jwt
 from ..utils.pagination import Pagination
-from entities.article import Article
-from entities import Session
-from entities.tag import Tag
+from models.article import Article
+from models.setting import Session
+from models.tag import Tag
 from schemas.tag import TagSchema
 from helper.message import PAGE_VALUE_ERROR, TAG_ALREADY_REGISTED, TAG_NOT_FOUND
 from helper.error import ErrorHandler

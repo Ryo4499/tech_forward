@@ -239,7 +239,13 @@ class UserPostAPI(Resource):
     def post(self):
         try:
             with Session() as session:
-                jsonData = UserSchema(only=("userName", "email", "password",),).load(
+                jsonData = UserSchema(
+                    only=(
+                        "userName",
+                        "email",
+                        "password",
+                    ),
+                ).load(
                     request.get_json(), session=session, partial=("role", "isActivate")
                 )
 

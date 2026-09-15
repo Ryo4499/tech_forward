@@ -10,7 +10,6 @@ from marshmallow_sqlalchemy.schema import SQLAlchemyAutoSchema, auto_field
 
 
 class UserSchema(SQLAlchemyAutoSchema):
-
     userId = auto_field()
     userName = auto_field(
         validate=Length(min=1, max=30),

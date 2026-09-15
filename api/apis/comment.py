@@ -44,7 +44,9 @@ class CommentAPI(Resource):
     def put(self, commentId):
         with Session() as session:
             try:
-                data = CommentSchema(only=("content",),).load(
+                data = CommentSchema(
+                    only=("content",),
+                ).load(
                     request.get_json(),
                     session=session,
                 )
@@ -77,7 +79,6 @@ class CommentAPI(Resource):
     @auth_required
     def delete(self, commentId):
         with Session() as session:
-
             comment = session.query(Comment).filter_by(commentId=commentId).first()
 
             # タグが存在しない場合

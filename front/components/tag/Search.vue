@@ -106,10 +106,10 @@ export default Vue.extend({
           params: { page: 1, perpage: 10 },
         })
         .then((res) => {
-          this.tags = res.data.result
+          this.tags = res.status === 204 ? [] : res.data.result
           this.show = true
         })
-        .catch((err) => {})
+        .catch((err) => { console.error(err.message) })
         .finally(() => {
           this.push = false
         })

@@ -8,9 +8,9 @@ from jwt_token import (
     self_or_admin_required_user,
     get_jwt,
 )
-from entities import Session
-from entities.user import User
-from entities.token_blocklist import TokenBlocklist
+from models.setting import Session
+from models.user import User
+from models.token_blocklist import TokenBlocklist
 from schemas.user import UserSchema
 from helper.error import ErrorHandler
 from helper.response import ResponseHandler
